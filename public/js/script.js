@@ -1,25 +1,19 @@
-let HEADER_LOGIN_INFO = "header-login-info"
 let ERROR_WRONG_PASSWORD = "Passwort ungültig"
-let HEADER_USERNAME = "username"
 let USERNAME
-let HEADER_USER_INFORMATION = "header-user-information"
-let DOC_Header_Login_Info = document.getElementById(HEADER_LOGIN_INFO)
-let STATE = 0;
 
 function Init(){
-    console.log("Init");
-    document.getElementById(HEADER_USER_INFORMATION).style.display = "none"
+    var offset = 56
+    document.getElementById("content-area").style.paddingTop = offset + "px"
+    document.getElementById("header-user-information").style.display = "none"
     if (getCookie("userType") == "poor"){
-        document.getElementById(HEADER_USERNAME).classList.add("text-bg-secondary")
+        document.getElementById("username").classList.add("text-bg-secondary")
         document.getElementById("nav-item-aktien").classList.add("disabled")
-        STATE = 1;
         USERNAME = "poor"
         loggedIn();
     }
     else if (getCookie("userType") == "rich"){
-        document.getElementById(HEADER_USERNAME).classList.add("text-bg-warning")
+        document.getElementById("username").classList.add("text-bg-warning")
         USERNAME = "rich"
-        STATE = 2;
         loggedIn();
     }
     else if (getCookie("userType") == "error"){
@@ -55,16 +49,9 @@ function eraseCookie(cookiename){
 }
 
 function loggedIn(){
-    if(STATE == 1){
-        //DOC_Header_Login_Info.innerText = "Hallo poor"
-    }
-    else if (STATE == 2){
-        //DOC_Header_Login_Info.innerText = "Hallo rich"
-
-    }
-    document.getElementById(HEADER_USERNAME).innerText = USERNAME
+    document.getElementById("username").innerText = USERNAME
     document.getElementById("header-login-inputs").style.display = "none"
-    document.getElementById(HEADER_USER_INFORMATION).style.display = "flex"
+    document.getElementById("header-user-information").style.display = "flex"
 }
 
 function logoutButtonOnClick(){
@@ -73,9 +60,6 @@ function logoutButtonOnClick(){
 }
 
 //Aktienfunktionalität
-
-
-
 function loadAktien(){
     loadAktie("IBM", "IBM", "line-chart-ibm")
     loadAktie("SAP", "SAP", "line-chart-sap")
@@ -83,24 +67,17 @@ function loadAktien(){
 }
 
 function loadAktie(name, symbol, canvas){
-    var api = "NI2UY3DVURQUQU24"
-    //var api = "demo"
     var date = []
     var closeValue = []
-    const url = "https://alphavantage.co/query?function=TIME_SERIES_DAILY&symbol="+symbol+"&apikey="+api
+    const url = "https://alphavantage.co/query?function=TIME_SERIES_DAILY&symbol="+symbol
 
-    console.log("loadAktien()");
     var query = "/proxy/?url=" + url
     var xhttp = new XMLHttpRequest();
     var response
-    console.log("AlphaVantage Search String ",query);
     xhttp.onreadystatechange = function() {
-    console.log("callback reached ",this.readyState);
     if (this.readyState == 4 && this.status == 200) {
       try {
-        //console.log(this.responseText);
         response = JSON.parse(this.responseText);
-        //console.log(response);
       } catch (e) {
         document.getElementById('main-card-aktien').innerHTML = e;
         document.getElementById('main-card-aktien').style.display = "block";
@@ -142,12 +119,9 @@ function loadAktie(name, symbol, canvas){
   };
   xhttp.open("GET",query, true);
   xhttp.send();
-
-  
-
 }
 
-
+//Funktion to show the Charts of the stocks
 function showChart(targetname, targetcanvas, dates, closeValues){
     var myChart = new Chart(document.getElementById(targetcanvas), {
         type: "line",

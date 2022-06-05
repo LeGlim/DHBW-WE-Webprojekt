@@ -13,7 +13,6 @@ const cookieParser = require("cookie-parser");
 // Here are some basic packages we need together with express
 var bodyParser = require('body-parser'); // helper routines to parse data as JSON in request body
 var fetch = require('node-fetch');       // http Server requests similar to the Client Version
-var basicAuth = require('express-basic-auth'); // Some basic HTTP Header Authorization
 const dotenv = require("dotenv");
 dotenv.config();
 //----------------------------------------------------------------------------
@@ -33,22 +32,6 @@ app.use(cookieParser());
 // in this example we force a http basic authentication if there is a request
 // with localhost:6001/admin
 // -----------------------------------------------------------------------------
-app.use('/admin',basicAuth( { authorizer: myAuthorizer,
-                    challenge: true} ))
-
-var challengeAuth = basicAuth({
-  authorizer: myAuthorizer,
-  challenge: true
-})
-
-app.get('/login', challengeAuth, function(req, res) {
-  res.status(200).send('You passed')
-})
-
-function myAuthorizer(username, password) {
-    console.log("Erstmal anmelden hier");
-    return username.startsWith('Asomething') && password.startsWith('secretstrange')
-}
 
 // -----------------------------------------------------------------------------
 // The Code enables CORS, just in case you want to explore this
@@ -93,7 +76,7 @@ app.get('/static/:document.:extension', function(req, res){
 });
 // -----------------------------------------------------------------------------
 // localhost:6001/redirect
-// will redirect us to the offical DHBW Homepage
+// will redirect us to the offical Jens Hocke Website
 // -----------------------------------------------------------------------------
 app.get('/redirect', function(req, res){
    res.redirect('https://www.jens-hocke.de');
@@ -123,6 +106,7 @@ app.post('/home', function(req, res){
   let enteredPassword = req.body.passwordinput
   console.log("entered password:" + enteredPassword);
 
+  //handle the form action and maybe set the cookie
   if(enteredPassword == process.env.PASSWORD_POOR){
     res.cookie("userType", "poor");
     res.redirect("/home");
@@ -169,6 +153,11 @@ app.get('/aktien', function(req, res){
 app.all('/proxy', function(req, res){
     var decompose = req.originalUrl.split("?");
     var fullurl = decompose[1] + "?" + decompose[2];
+
+    //add the API-Key from .env file
+    if(fullurl.startsWith("url=https://alphavantage.co/query?function=")){
+      fullurl += ("&apikey=" + process.env.ALPHA_API)
+    }
     console.log("Proxy Server reached", fullurl);
     fullurl = fullurl.replace("url=","");
     fetch(fullurl, {
@@ -182,6 +171,7 @@ app.all('/proxy', function(req, res){
     .catch((err) => {
       res.send({error: err, status: err, response: ""});
     });
+
 // do some basic exception handling (as desribed in the package but could be more in reality)
 function checkStatus(response) {
         if (response.ok) { // res.status >= 200 && res.status < 300
@@ -191,30 +181,3 @@ function checkStatus(response) {
         }
     }
 });
-// -----------------------------------------------------------------------------
-//  Chat Management using Cloudant as DB in the Cloud
-// -----------------------------------------------------------------------------
-app.all('/chat', function (req,res) {
-  console.log(req.body.cmd);
-  if (req.body.Group == undefined || req.body.Group == "") {req.body.Group = "GlobalChat"}
-    fetch("https://juergenschneider.eu-gb.mybluemix.net/chat", {
-        method: "POST",
-        headers: { 'Content-Type': 'application/json' },
-        body:JSON.stringify(req.body)
-    })
-    .then(checkStatus)  // do some basic status checking first.. throw an exception in case of trouble
-    .then((response) => response.json())
-    .then((json) => {res.send(json);
-            })
-    .catch((err) => {
-      res.send({Status:"NOK", Data:err.message});
-    });
-// do some basic exception handling (as desribed in the package but could be more in reality)
- function checkStatus(response) {
-        if (response.ok) { // res.status >= 200 && res.status < 300
-            return response;
-        } else {
-            throw {message : response.statusText};
-        }
-    }
-  });
