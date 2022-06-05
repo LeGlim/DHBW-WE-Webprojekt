@@ -37,7 +37,7 @@ app.use(cookieParser());
 // The Code enables CORS, just in case you want to explore this
 // option
 // -----------------------------------------------------------------------------
-app.use(function(req, res, next) {
+app.use(function (req, res, next) {
   res.header("Access-Control-Allow-Origin", "*");
   res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
   next();
@@ -45,7 +45,7 @@ app.use(function(req, res, next) {
 // -----------------------------------------------------------------------------
 // the WebServer now listens to http://localhost:6001 / http gets and posts
 // -----------------------------------------------------------------------------
-var server = app.listen(6001, function() {
+var server = app.listen(6001, function () {
   console.log('***********************************');
   console.log('listening:', 6001);
   console.log('***********************************');
@@ -63,14 +63,15 @@ var server = app.listen(6001, function() {
 // node will use the public folder and concatenates the url path in order to
 // find the file
 // -----------------------------------------------------------------------------
-app.get('/static/:document.:extension', function(req, res){
-   var docname = "/" + req.params.extension + "/" + req.params.document+ "." + req.params.extension ;
-   var options = {
-   root: __dirname + '/public/',
-   }
-   res.sendFile(docname, options, function (err) { // send the file !!
-    if (err) {res.send(err);}
-     else {console.log('Sent:', docname);
+app.get('/static/:document.:extension', function (req, res) {
+  var docname = "/" + req.params.extension + "/" + req.params.document + "." + req.params.extension;
+  var options = {
+    root: __dirname + '/public/',
+  }
+  res.sendFile(docname, options, function (err) { // send the file !!
+    if (err) { res.send(err); }
+    else {
+      console.log('Sent:', docname);
     }
   });
 });
@@ -78,40 +79,40 @@ app.get('/static/:document.:extension', function(req, res){
 // localhost:6001/redirect
 // will redirect us to the offical Jens Hocke Website
 // -----------------------------------------------------------------------------
-app.get('/redirect', function(req, res){
-   res.redirect('https://www.jens-hocke.de');
+app.get('/redirect', function (req, res) {
+  res.redirect('https://www.jens-hocke.de');
 });
 
-app.get('/', function(req, res){
+app.get('/', function (req, res) {
   res.redirect('/home');
 });
 // -----------------------------------------------------------------------------
 // localhost:6001/home
 //  we show the map.htm which is the Google Map at the local Stuttgart
 // -----------------------------------------------------------------------------
-app.get('/home', function(req, res){
+app.get('/home', function (req, res) {
   var docname = "/html/index.html";
-  var options = {root: __dirname + '/public/'}
+  var options = { root: __dirname + '/public/' }
   res.sendFile(docname, options, function (err) { // send this file
-   if (err) {
-     res.send(err);
-   } else {
-     console.log('Sent:', docname);
-   }
- });
+    if (err) {
+      res.send(err);
+    } else {
+      console.log('Sent:', docname);
+    }
+  });
 });
 
-app.post('/home', function(req, res){
+app.post('/home', function (req, res) {
   console.log("POST: home");
   let enteredPassword = req.body.passwordinput
   console.log("entered password:" + enteredPassword);
 
   //handle the form action and maybe set the cookie
-  if(enteredPassword == process.env.PASSWORD_POOR){
+  if (enteredPassword == process.env.PASSWORD_POOR) {
     res.cookie("userType", "poor");
     res.redirect("/home");
   }
-  else if(enteredPassword == process.env.PASSWORD_RICH){
+  else if (enteredPassword == process.env.PASSWORD_RICH) {
     res.cookie("userType", "rich");
     res.redirect("/home");
   }
@@ -123,61 +124,73 @@ app.post('/home', function(req, res){
 });
 
 
-app.get('/infos', function(req, res){
+app.get('/infos', function (req, res) {
   var docname = "/html/infos.html";
-  var options = {root: __dirname + '/public/'}
-  res.sendFile(docname, options, function (err) { // send this file
-   if (err) {
-     res.send(err);
-   } else {
-     console.log('Sent:', docname);
-   }
- });
+  var options = { root: __dirname + '/public/' }
+  if (req.cookies.userType == "poor" || req.cookies.userType == "rich") {
+    res.sendFile(docname, options, function (err) { // send this file
+      if (err) {
+        res.send(err);
+      } else {
+        console.log('Sent:', docname);
+      }
+    });
+  }
+  else {
+    res.redirect("/home");
+  }
+
 });
 
-app.get('/aktien', function(req, res){
+app.get('/aktien', function (req, res) {
   var docname = "/html/aktien.html";
-  var options = {root: __dirname + '/public/'}
-  res.sendFile(docname, options, function (err) { // send this file
-   if (err) {
-     res.send(err);
-   } else {
-     console.log('Sent:', docname);
-   }
- });
+  var options = { root: __dirname + '/public/' }
+  if (req.cookies.userType == "rich") {
+    res.sendFile(docname, options, function (err) { // send this file
+      if (err) {
+        res.send(err);
+      } else {
+        console.log('Sent:', docname);
+      }
+    });
+  }
+  else {
+    res.redirect("/home");
+  }
 });
 //------------------------------------------------------------------------------
 // localhost:6001/proxy?url_to_be_proxied
 // The incoming request will transfered using the fetch package
 //------------------------------------------------------------------------------
-app.all('/proxy', function(req, res){
-    var decompose = req.originalUrl.split("?");
-    var fullurl = decompose[1] + "?" + decompose[2];
+app.all('/proxy', function (req, res) {
+  var decompose = req.originalUrl.split("?");
+  var fullurl = decompose[1] + "?" + decompose[2];
 
-    //add the API-Key from .env file
-    if(fullurl.startsWith("url=https://alphavantage.co/query?function=")){
-      fullurl += ("&apikey=" + process.env.ALPHA_API)
-    }
-    console.log("Proxy Server reached", fullurl);
-    fullurl = fullurl.replace("url=","");
-    fetch(fullurl, {
-        method: req.method,
-        headers: { 'Content-Type': 'application/json' },
-    })
+  //add the API-Key from .env file
+  if (fullurl.startsWith("url=https://alphavantage.co/query?function=")) {
+    fullurl += ("&apikey=" + process.env.ALPHA_API)
+  }
+  console.log("Proxy Server reached", fullurl);
+  fullurl = fullurl.replace("url=", "");
+  fetch(fullurl, {
+    method: req.method,
+    headers: { 'Content-Type': 'application/json' },
+  })
     .then(checkStatus)  // do some basic status checking first.. throw an exception in case of trouble
     .then((response) => response.json())
-    .then((json) => {res.send({error: null, status: json.status, response: json});
-            })
+    .then((json) => {
+      res.send({ error: null, status: json.status, response: json });
+    })
     .catch((err) => {
-      res.send({error: err, status: err, response: ""});
+      res.send({ error: err, status: err, response: "" });
     });
 
-// do some basic exception handling (as desribed in the package but could be more in reality)
-function checkStatus(response) {
-        if (response.ok) { // res.status >= 200 && res.status < 300
-            return response;
-        } else {
-            throw {message : response.statusText};
-        }
+  // do some basic exception handling (as desribed in the package but could be more in reality)
+  function checkStatus(response) {
+    if (response.ok) { // res.status >= 200 && res.status < 300
+      return response;
+    } else {
+      throw { message: response.statusText };
     }
+  }
 });
