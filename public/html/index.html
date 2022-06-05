@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>4793868 - Dein Portal</title>
+  <!-- <link rel="stylesheet" type="text/css" href="../stylesheets/style.css"> -->
+  <link rel="stylesheet" type="text/css" href="../stylesheets/bootstrap.css">
+</head>
+<body>
+  <header id="header-area">
+    <nav class="navbar navbar-expand-md navbar-dark bg-dark sticky-top">
+      <div class="container-fluid">
+        <a class="navbar-brand" href="#">4793868</a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="true" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="navbar-collapse collapse" id="navbarCollapse">
+        <ul class="navbar-nav nav-pills me-auto mb-2 mb-md-0 mt-2 mt-md-0">
+          <li class="nav-item">
+            <a href="/home" class="nav-link active ps-2 ms-1" id="nav-item-home" aria-current="page">Home</a>
+          </li>
+          <li class="nav-item">
+            <a href="/infos" class="nav-link ps-2 ms-1" id="nav-item-infos">Infos <span class="badge text-bg-secondary">poor</span></a>
+          </li>
+          <li class="nav-item">
+            <a href="/aktien" class="nav-link ps-2 ms-1" id="nav-item-aktien">Aktien <span class="badge text-bg-warning">rich</span></a>
+          </li>
+        </ul>
+
+        <div id="header-login-inputs" class="header-login">
+            <form class="d-flex" action="/home" method="post">
+              <div class="input-group">
+                <span class="input-group-text" id="basic-addon1">
+                  <svg width="16" height="16" fill="currentColor" class="bi bi-key" viewBox="0 0 16 16">
+                    <path d="M0 8a4 4 0 0 1 7.465-2H14a.5.5 0 0 1 .354.146l1.5 1.5a.5.5 0 0 1 0 .708l-1.5 1.5a.5.5 0 0 1-.708 0L13 9.207l-.646.647a.5.5 0 0 1-.708 0L11 9.207l-.646.647a.5.5 0 0 1-.708 0L9 9.207l-.646.647A.5.5 0 0 1 8 10h-.535A4 4 0 0 1 0 8zm4-3a3 3 0 1 0 2.712 4.285A.5.5 0 0 1 7.163 9h.63l.853-.854a.5.5 0 0 1 .708 0l.646.647.646-.647a.5.5 0 0 1 .708 0l.646.647.646-.647a.5.5 0 0 1 .708 0l.646.647.793-.793-1-1h-6.63a.5.5 0 0 1-.451-.285A3 3 0 0 0 4 5z"/>
+                    <path d="M4 8a1 1 0 1 1-2 0 1 1 0 0 1 2 0z"/>
+                  </svg>
+                </span>
+                <input class="form-control me-2" type="password" id="password-input" name="passwordinput" placeholder="Passwort" required>
+              </div>
+              
+              <input class="btn btn-outline-success" type="submit" id="button-submit" name="button-submit" value="Anmelden">
+              
+            </form>
+          
+        </div>
+        <div id="header-user-information" class="text-light">
+          <div class="input-group me-3">
+            <span class="input-group-text" id="basic-addon1">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-person-circle" viewBox="0 0 16 16">
+                <path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0z"/>
+                <path fill-rule="evenodd" d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8zm8-7a7 7 0 0 0-5.468 11.37C3.242 11.226 4.805 10 8 10s4.757 1.225 5.468 2.37A7 7 0 0 0 8 1z"/>
+              </svg>
+            </span>
+            <span class="input-group-text" id="username"></span>
+          </div>
+
+          <div id="header-logout-button" class="float-end">
+            <button class="btn btn-outline-primary" id="button_logout" onclick="logoutButtonOnClick()">Abmelden</button>
+          </div>
+        </div>
+        
+      </div>
+    
+      </div>
+      
+    </nav>
+    
+  </header>
+
+  <main id="content-area" class="container mt-4 card-group">
+    <div class="card">
+      <h2 class="pt-3 ps-3">4793868</h2>
+      <div class="card-body">
+        <p class="lead">Das ist nicht nur eine Zahl.</p>
+        <p>Viel mehr ist ein eine Ziffernfolge, welche einen das ganze Bachelorstudium lang begleitet.</p>
+      </div>
+    </div>
+
+    <div class="card">
+        <h2 class="pt-3 ps-3">Warum komme ich in der Navigation nicht weiter?</h2>
+      <div class="card-body">
+        <p class="lead">Was bedeuten <span class="badge text-bg-secondary">poor</span> und <span class="badge text-bg-warning">rich</span>?</p>
+        <p>Diese beiden Bezeichnungen bezeichnen Rollen auf unserer Webseite. Je nach Rolle haben Sie unterschiedliche Berechtigungen auf Seiten zuzugreifen.</p>
+        <ul>
+          <li>
+            <h4>Sie sehen in der Navigation ein Eingabefeld für ein Passwort?</h4>
+            <p>Dann sind sie aktuell nicht angemeldet und haben nur die Berechtigung die Home-Seite zu sehen.</p>
+          </li>
+          <li>
+            <h4>Sie sehen in der Navigation den Badge <span class="badge text-bg-secondary">poor</span>?</h4>
+            <p>Sie sind angemeldet, haben aber nur die weitere Berechtigung für den Infos-Tab.</p>
+          </li>
+          <li>
+            <h4>Sie sehen in der Navigation den Badge <span class="badge text-bg-warning">rich</span>?</h4>
+            <p>Herzlichen Glückwunsch, Sie haben die höchste Berechtigungsstufe und dürfen den Aktien-Tab besuchen.</p>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </main>
+
+  <footer id="footer-area" class="fixed-bottom container">
+    <p class="text-center"></p>
+  </footer>
+
+
+
+  <script src="../js/script.js"></script>
+  <script src="../js/bootstrap.js"></script>
+  <script>
+    document.getElementsByTagName("body")[0].onload = Init;
+  </script>
+</body>
+</html>
