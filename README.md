@@ -4,6 +4,7 @@ A Website where you are able to perform different actions and access different s
 > TODO
 ## Project setup with docker
 ### 1. Build the docker image
+- Pull the directory from this GitHub
 - Make sure you are in the **same directory as the Dockerfile**
 - **`yourcontainernamehere` can be replaced** with a name of your liking, don't forget to also change it in the run command
 - Make sure you have no equaly named image or container from previous projects, cause it might cause problems
